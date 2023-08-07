@@ -22,7 +22,7 @@ function Register() {
     const result = await signIn("credentials", { ...data, redirect: false });
 
     if (result?.error) {
-      alert(`Login failed: ${result.error}`);
+      alert(`Login failed: Credentials not found`);
     } else {
       router.push("/dashboard");
     }

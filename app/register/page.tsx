@@ -27,9 +27,13 @@ function Register() {
       },
       body: JSON.stringify({ data }),
     });
-    const responseInfo = await response.json();
-    console.log(responseInfo);
-    router.push("/login");
+    try {
+      const responseInfo = await response.json();
+      console.log(responseInfo);
+      router.push("/login");
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
