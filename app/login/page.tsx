@@ -66,7 +66,7 @@ function Login() {
           </form>
           <div className="flex flex-col gap-4">
             <Link href={"/register"}>Go to Register</Link>
-            <Link href={"/forgot"}>Forgot my password</Link>
+            <Link href={"/password/forget"}>Forgot my password</Link>
           </div>
         </div>
       </div>

@@ -14,22 +14,21 @@ function Register() {
   const {
     register,
     handleSubmit,
-    watch,
     formState: { errors },
   } = useForm<Inputs>();
 
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
     console.log(data);
+
     const response = await fetch("/api/register", {
       method: "POST",
+      body: JSON.stringify({ data }),
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ data }),
     });
     try {
-      const responseInfo = await response.json();
-      console.log(responseInfo);
+      console.log(response);
       router.push("/login");
     } catch (error) {
       console.log(error);

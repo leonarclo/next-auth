@@ -2,39 +2,36 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useForm, SubmitHandler } from "react-hook-form";
-import { useSession, signOut, signIn } from "next-auth/react";
 
 type Inputs = {
   email: string;
-  password: string;
 };
 
-function Forgot() {
+function Forget() {
   const router = useRouter();
 
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm();
-
+  } = useForm<Inputs>();
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
-    console.log(data);
+    console.log({ data });
 
-    const response = await fetch("/api/forgot", {
+    const response = await fetch("/api/forgetPassword", {
       method: "POST",
       body: JSON.stringify({ data }),
       headers: {
         "Content-Type": "application/json",
-        Accept: "application/json",
       },
     });
     try {
-      const responseInfo = await response.json();
-      console.log(responseInfo);
-      router.push("/login");
-    } catch (error) {
-      console.log(error);
+      if (response.ok) {
+        console.log(response);
+        router.push("/login");
+      }
+    } catch (error: any) {
+      console.log("EROWW", error);
     }
   };
 
@@ -68,4 +65,4 @@ function Forgot() {
   );
 }
 
-export default Forgot;
+export default Forget;

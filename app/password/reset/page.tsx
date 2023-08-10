@@ -1,45 +1,51 @@
 "use client";
 import Link from "next/link";
-import { useRouter } from "next/router";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
-import { useSession, signOut, signIn } from "next-auth/react";
 
 type Inputs = {
-  email: string;
-  password: string;
+  newPassword: string;
+  newPassword2: string;
 };
 
-function Forgot() {
+function ResetPasswod() {
   const router = useRouter();
+  const [token, setToken] = useState("");
 
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm();
+  } = useForm<Inputs>();
+
+  useEffect(() => {
+    const urlToken = window.location.search.split("=")[1];
+    setToken(urlToken || "");
+  }, []);
 
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
-    console.log(data);
+    console.log(data, token);
 
-    const newPassword = {
-      tokenId: router.query.token,
-      password: data.password,
-    };
-
-    const response = await fetch("/api/forgot", {
-      method: "PUT",
-      body: JSON.stringify(newPassword),
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-      },
-    });
-    try {
-      const responseInfo = await response.json();
-      console.log(responseInfo);
-      router.push("/login");
-    } catch (error) {
-      console.log(error);
+    if (data.newPassword !== data.newPassword2) {
+      alert("Passwords must match!");
+    } else {
+      const response = await fetch("/api/resetPassword", {
+        method: "POST",
+        body: JSON.stringify({ data, token }),
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+      });
+      try {
+        if (response.ok) {
+          console.log(response);
+          router.push("/login");
+        }
+      } catch (error) {
+        console.log(error);
+      }
     }
   };
 
@@ -47,17 +53,17 @@ function Forgot() {
     <section className="bg-black h-screen w-sreen">
       <div className="container m-auto p-10 flex items-center justify-center h-full">
         <div className="border border-white rounded text-white flex flex-col gap-10 p-10">
-          <h1 className="text-center text-xl">Reset password</h1>
+          <h1 className="text-center text-xl">Reset Password</h1>
           <form
             onSubmit={handleSubmit(onSubmit)}
             className="flex flex-col gap-6"
           >
             <div className="flex flex-col">
-              <label>Password</label>
+              <label>New Password</label>
               <input
                 className="bg-black border border-white rounded"
                 type="password"
-                {...register("password", {
+                {...register("newPassword", {
                   required: "Password is required",
                   minLength: {
                     value: 6,
@@ -65,22 +71,22 @@ function Forgot() {
                   },
                 })}
               />
-              {errors.password && <p>{errors.password.message}</p>}
+              {errors.newPassword && <p>{errors.newPassword.message}</p>}
             </div>
             <div className="flex flex-col">
-              <label>Confirm Password</label>
+              <label>Confirm New Password</label>
               <input
                 className="bg-black border border-white rounded"
                 type="password"
-                {...register("password", {
-                  required: "Password is required",
+                {...register("newPassword2", {
+                  required: "Password confirmation is required",
                   minLength: {
                     value: 6,
                     message: "Password must be at least 6 characters",
                   },
                 })}
               />
-              {errors.password && <p>{errors.password.message}</p>}
+              {errors.newPassword2 && <p>{errors.newPassword2.message}</p>}
             </div>
             <button type="submit" className="p-2 border border-white rounded">
               Submit
@@ -95,4 +101,4 @@ function Forgot() {
   );
 }
 
-export default Forgot;
+export default ResetPasswod;
