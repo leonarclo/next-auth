@@ -19,7 +19,6 @@ function Register() {
 
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
     console.log(data);
-
     const response = await fetch("/api/register", {
       method: "POST",
       body: JSON.stringify({ data }),
@@ -30,7 +29,7 @@ function Register() {
     try {
       console.log(response);
       router.push("/login");
-    } catch (error) {
+    } catch (error: any) {
       console.log(error);
     }
   };

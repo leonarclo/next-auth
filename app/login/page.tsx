@@ -2,7 +2,6 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useForm, SubmitHandler } from "react-hook-form";
-import { signIn } from "next-auth/react";
 
 type Inputs = {
   email: string;
@@ -11,20 +10,29 @@ type Inputs = {
 
 function Login() {
   const router = useRouter();
-
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm();
-  const onSubmit: SubmitHandler<Inputs> = async (data) => {
-    console.log(data);
-    const result = await signIn("credentials", { ...data, redirect: false });
+  } = useForm<Inputs>();
 
-    if (result?.error) {
-      alert(`Login failed: Credentials not found`);
-    } else {
-      router.push("/dashboard");
+  const onSubmit: SubmitHandler<Inputs> = async (data) => {
+    console.log({ data });
+    try {
+      const response = await fetch("/api/login", {
+        method: "POST",
+        body: JSON.stringify({ data }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (response.ok) {
+        console.log(response);
+        router.push("/dashboard");
+      }
+    } catch (error: any) {
+      console.log("vISHHHHH");
     }
   };
 
