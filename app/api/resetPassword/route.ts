@@ -29,13 +29,9 @@ export async function POST(request: NextResponse) {
         hashedPassword: hashedPass,
       },
     });
-    await prisma.verificationToken.update({
+    await prisma.verificationToken.delete({
       where: {
         token: token,
-      },
-      data: {
-        token: undefined,
-        expires: undefined,
       },
     });
     prisma.user.upsert;

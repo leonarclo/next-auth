@@ -21,22 +21,13 @@ export async function sendEmail({ email, emailType, userId }: SendEmailType) {
     const user = await prisma.user.findUnique({ where: { email: email } });
 
     if (user) {
-      if (emailType === EmailType.verify) {
-        await prisma.user.update({
-          where: { id: userId },
-          data: {
-            emailVerified: new Date(),
-          },
-        });
-      } else if (emailType === EmailType.reset) {
-        await prisma.verificationToken.create({
-          data: {
-            identifier: user.id,
-            token: hashedToken,
-            expires: new Date(new Date().getTime() + 3600000),
-          },
-        });
-      }
+      await prisma.verificationToken.create({
+        data: {
+          identifier: user.id,
+          token: hashedToken,
+          expires: new Date(new Date().getTime() + 3600000),
+        },
+      });
     }
 
     const transporter = nodemailer.createTransport({
