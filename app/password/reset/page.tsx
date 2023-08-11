@@ -30,7 +30,7 @@ function ResetPasswod() {
     if (data.newPassword !== data.newPassword2) {
       alert("Passwords must match!");
     } else {
-      const response = await fetch("/api/resetPassword", {
+      const response = await fetch("/api/auth/resetPassword", {
         method: "POST",
         body: JSON.stringify({ data, token }),
         headers: {

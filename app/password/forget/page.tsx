@@ -18,7 +18,7 @@ function Forget() {
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
     console.log({ data });
 
-    const response = await fetch("/api/forgetPassword", {
+    const response = await fetch("/api/auth/forgetPassword", {
       method: "POST",
       body: JSON.stringify({ data }),
       headers: {

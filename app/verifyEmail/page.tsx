@@ -13,7 +13,7 @@ function VerifyEmail() {
 
     const verifyEmailUser = async () => {
       try {
-        const response = await fetch("/api/verifyEmail", {
+        const response = await fetch("/api/auth/verifyEmail", {
           method: "POST",
           body: JSON.stringify({ token }),
           headers: {

@@ -4,7 +4,7 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
 const prisma = new PrismaClient();
-export async function POST(request: NextRequest, response: NextResponse) {
+export async function POST(request: NextRequest) {
   try {
     prisma.$connect();
     const body = await request.json();
@@ -29,7 +29,6 @@ export async function POST(request: NextRequest, response: NextResponse) {
     const tokenUserSession = {
       id: user.id,
       email: user.email,
-      password: user.hashedPassword,
     };
 
     const token = jwt.sign(tokenUserSession, process.env.SECRET!, {
@@ -42,6 +41,7 @@ export async function POST(request: NextRequest, response: NextResponse) {
     });
 
     response.cookies.set("token", token, { httpOnly: true });
+
     return response;
   } catch (error: any) {
     console.log("errouuuuu", error);

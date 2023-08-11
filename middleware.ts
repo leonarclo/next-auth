@@ -8,7 +8,10 @@ export function middleware(request: NextRequest) {
     path === "/verifyEmail" ||
     path === "/password/forget";
 
-  const token = request.cookies.get("token")?.value;
+  const token = request.cookies.get("token")?.value || "";
+  if (isPublicPath && token) {
+    return NextResponse.redirect(new URL("/dashboard", request.nextUrl));
+  }
   if (!isPublicPath && !token) {
     return NextResponse.redirect(new URL("/login", request.url));
   }

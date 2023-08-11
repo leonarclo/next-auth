@@ -1,7 +1,9 @@
 "use client";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useContext } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
+import { UserContext } from "../context/UserContext";
 
 type Inputs = {
   email: string;
@@ -9,6 +11,7 @@ type Inputs = {
 };
 
 function Login() {
+  const { getUserData } = useContext(UserContext);
   const router = useRouter();
   const {
     register,
@@ -19,16 +22,15 @@ function Login() {
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
     console.log({ data });
     try {
-      const response = await fetch("/api/login", {
+      const response = await fetch("/api/auth/login", {
         method: "POST",
         body: JSON.stringify({ data }),
         headers: {
           "Content-Type": "application/json",
         },
       });
-
       if (response.ok) {
-        console.log(response);
+        getUserData();
         router.push("/dashboard");
       }
     } catch (error: any) {
