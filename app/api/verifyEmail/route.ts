@@ -32,7 +32,7 @@ export async function POST(request: NextRequest) {
       },
     });
     prisma.user.upsert;
-    return new NextResponse(`Password update successfully!`);
+    return new NextResponse(`Email verified successfully!`);
   } catch (error: any) {
     return new NextResponse(`Error: ${error}`, { status: 500 });
   }
